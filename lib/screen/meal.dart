@@ -4,8 +4,8 @@ import 'package:meals/widget/meal_item.dart';
 import '../model/meal.dart';
 
 class MealsScreen extends StatelessWidget {
-  MealsScreen({required this.title, required this.meals});
-  final String title;
+  MealsScreen({this.title, required this.meals});
+  final String? title;
   final List<Meal> meals;
 
   @override
@@ -41,9 +41,13 @@ class MealsScreen extends StatelessWidget {
           itemCount: meals.length, //number of meals will display
           itemBuilder: (context, index) => MealItem(meal: meals[index]));
     }
+
+    if (title == null) {
+      return content;
+    }
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(title!),
       ),
       body: content, //List View
     );
