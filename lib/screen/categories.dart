@@ -3,11 +3,14 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:meals/model/category.dart';
 import 'package:meals/screen/meal.dart';
+import '../model/meal.dart';
 import '../widget/category_grid_item.dart';
 import '../data/category_data.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({Key? key}) : super(key: key);
+  const CategoriesScreen({Key? key, required this.toggleFavoriteMeal})
+      : super(key: key);
+  final void Function(Meal meal) toggleFavoriteMeal;
 
   void _selectCategory(BuildContext context, Category category) {
     //this function to pick the category and move to meals
@@ -22,8 +25,11 @@ class CategoriesScreen extends StatelessWidget {
       //with this widget we deal with stack push and pop Screens
       MaterialPageRoute(
         //route to meal screen
-        builder: ((context) =>
-            MealsScreen(title: category.title, meals: filteredMeals)),
+        builder: ((context) => MealsScreen(
+              title: category.title,
+              meals: filteredMeals,
+              toggleFavoriteMeal: toggleFavoriteMeal,
+            )),
       ),
     );
   }

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:meals/main.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import '../model/meal.dart';
 
 class MealDetails extends StatelessWidget {
-  const MealDetails({super.key, required this.meal});
+  const MealDetails(
+      {super.key, required this.meal, required this.toggleFavoriteMeal});
 
   final Meal meal;
+  final void Function(Meal meal) toggleFavoriteMeal;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,14 +17,16 @@ class MealDetails extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(right: 5),
             child: IconButton(
-              icon: const Icon(Icons.star),
-              onPressed: () {},
+              icon: Icon(Icons.star_border_outlined),
+              onPressed: () {
+                toggleFavoriteMeal(meal);
+              },
             ),
           ),
         ],
         title: Text(
           meal.title,
-          style: TextStyle(fontSize: 18),
+          style: const TextStyle(fontSize: 18),
         ),
       ),
       body: SingleChildScrollView(

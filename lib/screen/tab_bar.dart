@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meals/screen/categories.dart';
 import 'package:meals/screen/meal.dart';
+import 'package:meals/widget/main_drawer.dart';
 
 import '../model/meal.dart';
 
@@ -20,31 +21,56 @@ class _TabBottomBarState extends State<TabBottomBar> {
     });
   }
 
+  void _snackBarMessage(String message) {
+    // function for snack bar message
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+
   void _toggleFavoriteMeal(Meal meal) {
     // controll the favorite list
     bool isExisted = _favoriteMealList.contains(meal);
     if (isExisted) {
-      _favoriteMealList.remove(meal);
+      setState(() {
+        _favoriteMealList.remove(meal);
+      });
+      _snackBarMessage('Favorite meal in no longer here');
     } else {
-      _favoriteMealList.add(meal);
+      setState(() {
+        _favoriteMealList.add(meal);
+      });
+      _snackBarMessage('The meal is add to favorite list ');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget activePage = CategoriesScreen();
+    Widget activePage =
+        CategoriesScreen(toggleFavoriteMeal: _toggleFavoriteMeal);
     String activePageTitle = 'Categories';
     if (_selectedIndex == 1) {
-      activePage = MealsScreen(meals: []);
+      activePage = MealsScreen(
+        meals: _favoriteMealList,
+        toggleFavoriteMeal: _toggleFavoriteMeal,
+      );
       activePageTitle = 'Favoraite';
     }
     return Scaffold(
+      drawer: const MainDrawer(),
       appBar: AppBar(
         title: Text(activePageTitle),
         centerTitle: true,
       ),
       body: activePage,
       bottomNavigationBar: BottomNavigationBar(
+          selectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
           elevation: 0,
           onTap: _selectedPage,
           currentIndex: _selectedIndex,
