@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meals/screen/categories.dart';
+import 'package:meals/screen/filter_screen.dart';
 import 'package:meals/screen/meal.dart';
 import 'package:meals/widget/main_drawer.dart';
 
@@ -48,6 +49,18 @@ class _TabBottomBarState extends State<TabBottomBar> {
     }
   }
 
+  void _setScreen(String screenName) async {
+    Navigator.of(context).pop();
+    if (screenName == 'Filtters') {
+      final result = await Navigator.of(context).push<Map<Filter, bool>>(
+        MaterialPageRoute(
+          builder: (ctx) => FilterScreen(),
+        ),
+      );
+      print(result);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget activePage =
@@ -61,7 +74,7 @@ class _TabBottomBarState extends State<TabBottomBar> {
       activePageTitle = 'Favoraite';
     }
     return Scaffold(
-      drawer: const MainDrawer(),
+      drawer: MainDrawer(onSelectScreen: _setScreen),
       appBar: AppBar(
         title: Text(activePageTitle),
         centerTitle: true,
