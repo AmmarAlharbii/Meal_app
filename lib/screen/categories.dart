@@ -8,13 +8,17 @@ import '../widget/category_grid_item.dart';
 import '../data/category_data.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({Key? key, required this.toggleFavoriteMeal})
+  const CategoriesScreen(
+      {Key? key,
+      required this.toggleFavoriteMeal,
+      required this.availabelmeals})
       : super(key: key);
   final void Function(Meal meal) toggleFavoriteMeal;
+  final List<Meal> availabelmeals;
 
   void _selectCategory(BuildContext context, Category category) {
     //this function to pick the category and move to meals
-    final filteredMeals = dummyMeals
+    final filteredMeals = availabelmeals
         .where(
           //matching the category id with meals by condtion
           (meal) => meal.categories.contains(category
@@ -48,7 +52,10 @@ class CategoriesScreen extends StatelessWidget {
           CategoryGridIem(
             category: avalibleCategory[i],
             selectCategory: () {
-              _selectCategory(context, avalibleCategory[i]);
+              _selectCategory(
+                context,
+                avalibleCategory[i],
+              );
             },
           ) //loop for assign data to grid views
       ],
