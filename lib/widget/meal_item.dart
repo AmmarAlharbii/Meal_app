@@ -5,10 +5,12 @@ import 'package:meals/widget/meal_item_trait.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MealItem extends StatelessWidget {
-  const MealItem(
-      {super.key, required this.meal, required this.toggleFavoriteMeal});
+  const MealItem({
+    super.key,
+    required this.meal,
+  });
   final Meal meal;
-  final void Function(Meal meal) toggleFavoriteMeal;
+
   String get complixtyText {
     //return comlicty name with first char is capital
     return meal.complexity.name[0].toUpperCase() +
@@ -26,7 +28,6 @@ class MealItem extends StatelessWidget {
       MaterialPageRoute(
         builder: (context) => MealDetails(
           meal: meal,
-          toggleFavoriteMeal: toggleFavoriteMeal,
         ),
       ),
     );
