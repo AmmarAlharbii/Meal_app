@@ -7,15 +7,40 @@ import '../model/meal.dart';
 import '../widget/category_grid_item.dart';
 import '../data/category_data.dart';
 
-class CategoriesScreen extends StatelessWidget {
+class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({Key? key, required this.availabeMeals})
       : super(key: key);
 
   final List<Meal> availabeMeals;
 
+  @override
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      lowerBound: 0,
+      upperBound: 1,
+      duration: const Duration(milliseconds: 500),
+    );
+    _animationController.forward(); //make ainmation start
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   void _selectCategory(BuildContext context, Category category) {
     //this function to pick the category and move to meals
-    final filteredMeals = availabeMeals
+    final filteredMeals = widget.availabeMeals
         .where(
           //matching the category id with meals by condtion
           (meal) => meal.categories.contains(category
@@ -36,25 +61,40 @@ class CategoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          //mange grideview
-          crossAxisCount: 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          childAspectRatio: 1.5),
-      children: [
-        for (int i = 0; i < avalibleCategory.length; i++) //for loop
-          CategoryGridIem(
-            category: avalibleCategory[i],
-            selectCategory: () {
-              _selectCategory(
-                context,
-                avalibleCategory[i],
-              );
-            },
-          ) //loop for assign data to grid views
-      ],
+    return AnimatedBuilder(
+      animation: _animationController,
+      child: GridView(
+        //child will never re renderd
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            //mange grideview
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: 1.5),
+        children: [
+          for (int i = 0; i < avalibleCategory.length; i++) //for loop
+            CategoryGridIem(
+              category: avalibleCategory[i],
+              selectCategory: () {
+                _selectCategory(
+                  context,
+                  avalibleCategory[i],
+                );
+              },
+            ) //loop for assign data to grid views
+        ],
+      ),
+      //this widget will re renderd all the time
+      builder: (context, child) => SlideTransition(
+        position: Tween(
+          begin: const Offset(0.0, 0.3),
+          end: const Offset(0, 0.0),
+        ).animate(
+          CurvedAnimation(
+              parent: _animationController, curve: Curves.easeInOut),
+        ),
+        child: child,
+      ),
     );
   }
 }
