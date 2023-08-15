@@ -23,7 +23,6 @@ class MealDetails extends ConsumerWidget {
           Container(
             margin: const EdgeInsets.only(right: 5),
             child: IconButton(
-              icon: Icon(isFavorite ? Icons.star : Icons.star_border),
               onPressed: () {
                 final wasAdded = ref
                     .read(favoriteMealProvider.notifier)
@@ -38,6 +37,19 @@ class MealDetails extends ConsumerWidget {
                   ),
                 );
               },
+              icon: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: Icon(
+                  isFavorite ? Icons.star : Icons.star_border,
+                  key: ValueKey(isFavorite),
+                ),
+                transitionBuilder: (child, animation) {
+                  return RotationTransition(
+                    turns: Tween<double>(begin: 0.8, end: 1).animate(animation),
+                    child: child,
+                  );
+                },
+              ),
             ),
           ),
         ],
@@ -49,14 +61,18 @@ class MealDetails extends ConsumerWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            FadeInImage(
-              //transition meal image
-              placeholder:
-                  MemoryImage(kTransparentImage), //first image is transprent
-              image: NetworkImage(meal.imageUrl), //the real image
-              fit: BoxFit.cover,
-              height: 300, //to make hieght normal not streach
-              width: double.infinity, // take all width
+            Hero(
+              //to moving widget across multiple screens
+              tag: meal.id,
+              child: FadeInImage(
+                //transition meal image
+                placeholder:
+                    MemoryImage(kTransparentImage), //first image is transprent
+                image: NetworkImage(meal.imageUrl), //the real image
+                fit: BoxFit.cover,
+                height: 300, //to make hieght normal not streach
+                width: double.infinity, // take all width
+              ),
             ),
             const SizedBox(
               height: 10,
